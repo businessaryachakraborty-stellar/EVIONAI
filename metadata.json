@@ -1,0 +1,6 @@
+{
+  "name": "EVION AI",
+  "description": "India's First AI Powered Career Companion. Preparing every engineering student to be placement ready through AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
