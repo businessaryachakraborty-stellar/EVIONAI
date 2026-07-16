@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Menu, X, ArrowRight } from "lucide-react";
+import CompanyLogo from "./CompanyLogo";
 
 interface NavbarProps {
   onScrollTo: (elementId: string) => void;
@@ -48,13 +49,10 @@ export default function FloatingNavbar({ onScrollTo, onOpenAdmin }: NavbarProps)
           <div className="flex items-center gap-2">
             <button
               onClick={() => onScrollTo("hero")}
-              className="group flex items-center gap-1.5 font-bold tracking-tight text-black text-lg focus:outline-none cursor-pointer"
+              className="group flex items-center gap-2 font-bold tracking-tight text-black text-lg focus:outline-none cursor-pointer"
             >
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-black text-white overflow-hidden transition-transform group-hover:scale-105">
-                <span className="font-extrabold text-sm tracking-tighter">EV</span>
-                <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-              <span className="font-sans font-bold text-black select-none">
+              <CompanyLogo size={28} className="transform group-hover:scale-105" />
+              <span className="font-sans font-extrabold tracking-tight text-black select-none">
                 EVION<span className="text-accent">.AI</span>
               </span>
             </button>
@@ -133,11 +131,9 @@ export default function FloatingNavbar({ onScrollTo, onOpenAdmin }: NavbarProps)
               {/* Drawer Top */}
               <div>
                 <div className="flex items-center justify-between pb-6 border-b border-neutral-100">
-                  <div className="flex items-center gap-1.5 font-bold tracking-tight text-black text-base">
-                    <div className="relative flex items-center justify-center w-7 h-7 rounded-lg bg-black text-white overflow-hidden">
-                      <span className="font-extrabold text-[12px] tracking-tighter">EV</span>
-                    </div>
-                    <span className="font-sans font-bold text-black select-none">
+                  <div className="flex items-center gap-2 font-bold tracking-tight text-black text-base">
+                    <CompanyLogo size={24} />
+                    <span className="font-sans font-extrabold tracking-tight text-black select-none">
                       EVION<span className="text-accent">.AI</span>
                     </span>
                   </div>

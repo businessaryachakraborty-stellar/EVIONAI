@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Send, Star, Compass, Heart } from "lucide-react";
+import CompanyLogo from "./CompanyLogo";
 
 export default function Footer() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -23,9 +24,7 @@ export default function Footer() {
         <div className="md:col-span-5 flex flex-col justify-between items-start space-y-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center font-extrabold text-sm tracking-tighter">
-                EV
-              </div>
+              <CompanyLogo size={28} />
               <span className="font-sans font-extrabold text-black tracking-tight text-lg">
                 EVION<span className="text-accent">.AI</span>
               </span>
