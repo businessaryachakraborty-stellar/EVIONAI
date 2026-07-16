@@ -22,8 +22,55 @@ export default function Hero({ onScrollTo, onPlayDemo }: HeroProps) {
     return () => clearTimeout(timer);
   }, []);
 
+  const headlineText = "Crack Placements\nWith AI Before\nYour Seniors Do.";
+  const subheadingText = "Everything you need to prepare for placements in one AI powered platform.";
+
+  const [typedHeadline, setTypedHeadline] = useState("");
+  const [typedSubheading, setTypedSubheading] = useState("");
+  const [activeCursor, setActiveCursor] = useState<"headline" | "subheading" | "none">("headline");
+
+  useEffect(() => {
+    let headlineIndex = 0;
+    let subheadingIndex = 0;
+    let subheadingInterval: any = null;
+    
+    // Type out headline first
+    const headlineInterval = setInterval(() => {
+      if (headlineIndex < headlineText.length) {
+        setTypedHeadline(headlineText.slice(0, headlineIndex + 1));
+        headlineIndex++;
+      } else {
+        clearInterval(headlineInterval);
+        // Switch pointer to subheading
+        setActiveCursor("subheading");
+        
+        // Start typing subheading
+        subheadingInterval = setInterval(() => {
+          if (subheadingIndex < subheadingText.length) {
+            setTypedSubheading(subheadingText.slice(0, subheadingIndex + 1));
+            subheadingIndex++;
+          } else {
+            if (subheadingInterval) clearInterval(subheadingInterval);
+          }
+        }, 15);
+      }
+    }, 40);
+
+    return () => {
+      clearInterval(headlineInterval);
+      if (subheadingInterval) clearInterval(subheadingInterval);
+    };
+  }, []);
+
+  const CursorPointer = () => (
+    <span className="inline-block w-[3px] h-[0.8em] bg-[#4F7EFF] ml-1.5 align-baseline animate-pulse rounded-full" />
+  );
+
   return (
     <section id="hero" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-[#FAFAFA] min-h-screen flex items-center">
+      {/* Elegant Background Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000012_1px,transparent_1px),linear-gradient(to_bottom,#00000012_1px,transparent_1px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_35%,#000_40%,transparent_100%)] pointer-events-none" />
+
       {/* Background radial gradient spotlight */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -34,24 +81,24 @@ export default function Hero({ onScrollTo, onPlayDemo }: HeroProps) {
 
           {/* Headline */}
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-black leading-[1.05] mb-5 font-sans"
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-black leading-[1.05] mb-5 font-sans whitespace-pre-line"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            Crack Placements <br />
-            With AI Before <br />
-            Your Seniors Do.
+            {typedHeadline}
+            {activeCursor === "headline" && <CursorPointer />}
           </motion.h1>
 
           {/* Subheading */}
           <motion.p
-            className="text-lg md:text-xl text-neutral-600 font-normal leading-relaxed max-w-xl mb-8"
+            className="text-lg md:text-xl text-neutral-600 font-normal leading-relaxed max-w-xl mb-8 min-h-[56px]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            Everything you need to prepare for placements in one AI powered platform.
+            {typedSubheading}
+            {activeCursor === "subheading" && <CursorPointer />}
           </motion.p>
 
           {/* Actions */}

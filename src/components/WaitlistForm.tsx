@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Send, CheckCircle2, AlertCircle, RefreshCw, Star } from "lucide-react";
+import confetti from "canvas-confetti";
 import { WaitlistFormInput } from "../types";
 
 export default function WaitlistForm() {
@@ -19,10 +20,6 @@ export default function WaitlistForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [stats, setStats] = useState({ baseCount: 15237, realCount: 0, totalCount: 15237 });
 
-  // Confetti Canvas Ref
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameId = useRef<number | null>(null);
-
   // Fetch real-time count stats on load
   const fetchStats = async () => {
     try {
@@ -39,90 +36,6 @@ export default function WaitlistForm() {
   useEffect(() => {
     fetchStats();
   }, [isSubmitted]);
-
-  // Canvas Confetti Implementation
-  const startConfetti = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
-    canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
-
-    interface Particle {
-      x: number;
-      y: number;
-      r: number;
-      d: number;
-      color: string;
-      tilt: number;
-      tiltAngleIncremental: number;
-      tiltAngle: number;
-    }
-
-    const colors = ["#4F7EFF", "#19C37D", "#FF4D4F", "#FFD700", "#FF4500", "#9370DB"];
-    const particles: Particle[] = Array.from({ length: 150 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height - canvas.height,
-      r: Math.random() * 6 + 4,
-      d: Math.random() * canvas.height,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      tilt: Math.random() * 10 - 5,
-      tiltAngleIncremental: Math.random() * 0.07 + 0.02,
-      tiltAngle: 0,
-    }));
-
-    let animationTime = 0;
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      animationTime++;
-
-      particles.forEach((p, idx) => {
-        p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
-        p.x += Math.sin(p.tiltAngle);
-        p.tiltAngle += p.tiltAngleIncremental;
-
-        ctx.beginPath();
-        ctx.lineWidth = p.r;
-        ctx.strokeStyle = p.color;
-        ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
-        ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
-        ctx.stroke();
-
-        // Recycle particles
-        if (p.y > canvas.height) {
-          particles[idx] = {
-            x: Math.random() * canvas.width,
-            y: -20,
-            r: p.r,
-            d: p.d,
-            color: p.color,
-            tilt: p.tilt,
-            tiltAngleIncremental: p.tiltAngleIncremental,
-            tiltAngle: p.tiltAngle,
-          };
-        }
-      });
-
-      if (animationTime < 240) {
-        animationFrameId.current = requestAnimationFrame(draw);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    };
-
-    draw();
-  };
-
-  useEffect(() => {
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-    };
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -160,10 +73,35 @@ export default function WaitlistForm() {
 
       setIsSubmitted(true);
       setIsLoading(false);
-      // Trigger canvas confetti explosion
+
+      // Trigger high-performance canvas-confetti explosions for ultimate visual reward
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ["#1E60FF", "#19C37D", "#FFD700", "#FF4500", "#9370DB"]
+      });
+
       setTimeout(() => {
-        startConfetti();
-      }, 100);
+        confetti({
+          particleCount: 80,
+          angle: 60,
+          spread: 60,
+          origin: { x: 0, y: 0.8 },
+          colors: ["#1E60FF", "#19C37D", "#FFD700"]
+        });
+      }, 200);
+
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          angle: 120,
+          spread: 60,
+          origin: { x: 1, y: 0.8 },
+          colors: ["#1E60FF", "#19C37D", "#FFD700"]
+        });
+      }, 350);
+
     } catch (err) {
       console.error(err);
       setErrorMessage("Network error. Please try again later.");
@@ -176,9 +114,6 @@ export default function WaitlistForm() {
       
       {/* Background spot radial light */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-accent/5 rounded-full blur-[110px] pointer-events-none" />
-
-      {/* Confetti canvas element */}
-      <canvas ref={canvasRef} className="absolute inset-0 z-20 pointer-events-none" />
 
       <div className="w-[92%] max-w-4xl mx-auto relative z-10">
         
